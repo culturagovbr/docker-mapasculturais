@@ -7,10 +7,11 @@ RUN apt-get install -y git
 RUN apt-get install -y curl
 RUN apt-get install -y nodejs
 RUN apt-get install -y npm
+# RUN apt-get install -y ruby-dev
 RUN apt-get install -y ruby
-
 RUN update-alternatives --install /usr/bin/node node /usr/bin/nodejs 10
 RUN npm install -g uglify-js uglifycss autoprefixer
+RUN gem update --system
 RUN gem install sass
 
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
