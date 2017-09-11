@@ -1,40 +1,37 @@
+FROM php:5.6.30-apache
 
-FROM debian:jessie
+VOLUME ["/var/www"]
 
-MAINTAINER Fabio Montefuscolo <fabio.montefuscolo@gmail.com>
-
-RUN apt-get update && apt-get install -y \
-    git curl nodejs npm ruby \
-    php5 php5-gd php5-cli php5-json php5-curl php5-pgsql php-apc \
-    postgresql-client
-
-RUN curl -sS https://getcomposer.org/installer | php \
-    && mv composer.phar /usr/local/bin/composer
+RUN apt-get update
+RUN apt-get install -y git
+RUN apt-get install -y curl
+RUN apt-get install -y nodejs
+RUN apt-get install -y npm
+RUN apt-get install -y ruby
 
 RUN update-alternatives --install /usr/bin/node node /usr/bin/nodejs 10
 RUN npm install -g uglify-js uglifycss autoprefixer
 RUN gem install sass
 
-RUN mkdir -p /srv/mapas
-COPY .  /srv/mapas/mapasculturais
+RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+RUN docker-php-ext-install gd
+RUN docker-php-ext-install php5-cli
+RUN docker-php-ext-install php5-json
+RUN docker-php-ext-install php5-curl
+RUN docker-php-ext-configure pgsql --with-pgsql=/usr/local/pgsql
+RUN docker-php-ext-configure pdo_pgsql --with-pgsql
+RUN docker-php-ext-install pgsql pdo_pgsql
+RUN docker-php-ext-install php-apc
 
-RUN useradd -G www-data -d /srv/mapas -s /bin/bash mapas; \
-    mkdir -p /srv/mapas/mapasculturais/src/assets; \
-    mkdir -p /srv/mapas/mapasculturais/src/files; \
-    chown -R mapas:www-data /srv/mapas
+RUN useradd -G www-data -d /var/www -s /bin/bash mapas; \
+    mkdir -p /var/www/mapasculturais/src/assets; \
+    mkdir -p /var/www/mapasculturais/src/files; \
+    chown -R mapas:www-data /var/www
 
-RUN rm /etc/apache2/apache2.conf \
-    && ln -sf /srv/mapas/mapasculturais/scripts/docker_apache2.conf /etc/apache2/apache2.conf
+WORKDIR /var/www/mapasculturais
 
-USER mapas
-WORKDIR /srv/mapas/mapasculturais
-
-RUN (cd src/protected \
-        && composer -n install --prefer-dist \
-        && composer -n dump-autoload --optimize)
-
-USER root
-ENTRYPOINT ["scripts/docker_entrypoint.sh"]
+COPY docker-entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["docker_entrypoint.sh"]
 
 RUN a2enmod rewrite
 ENV APACHE_LOCK_DIR=/var/lock/apache2
@@ -47,4 +44,3 @@ ENV APACHE_MINSPARESERVERS=3
 
 EXPOSE 80
 CMD ["apache2", "-DFOREGROUND"]
-
