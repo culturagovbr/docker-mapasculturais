@@ -30,6 +30,10 @@ if ! [ -d "/var/www/mapasculturais" ] || ! [ -d "/var/www/mapasculturais/src" ];
     echo "Complete! The application has been successfully copied to /var/www/mapasculturais"
 fi
 
+if ! [ -d "/var/www/log" ] &&  ! [ -d "/var/www/log/mapasculturais" ]; then
+    mkdir -p /var/www/log/mapasculturais;
+fi
+
 ###### OBS: chamar no entrypoint : COPY . /srv/mapas/mapasculturais
 
 # export PG_DB="${PG_DB:-mapasculturais}";

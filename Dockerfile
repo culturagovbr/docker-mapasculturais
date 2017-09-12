@@ -34,19 +34,20 @@ RUN docker-php-ext-configure pdo_pgsql --with-pgsql
 RUN docker-php-ext-install pgsql pdo_pgsql
 RUN pecl install apc
 
+RUN useradd -G www-data -d /var/www -s /bin/bash mapas; \
+    mkdir -p /var/www/mapasculturais/src/assets; \
+    mkdir -p /var/www/mapasculturais/src/files; \
+    chown -R mapas:www-data /var/www
+
 RUN a2enmod rewrite
 ENV APACHE_LOCK_DIR=/var/lock/apache2
 ENV APACHE_PID_FILE=/var/run/apache2/apache2.pid
+ENV APACHE_LOG_DIR=/var/www/log/mapasculturais
 ENV APACHE_RUN_USER=mapas
 ENV APACHE_RUN_GROUP=www-data
 ENV APACHE_STARTSERVERS=3
 ENV APACHE_MAXSPARESERVERS=5
 ENV APACHE_MINSPARESERVERS=3
-
-RUN useradd -G www-data -d /var/www -s /bin/bash mapas; \
-    mkdir -p /var/www/mapasculturais/src/assets; \
-    mkdir -p /var/www/mapasculturais/src/files; \
-    chown -R mapas:www-data /var/www
 
 WORKDIR /var/www
 
