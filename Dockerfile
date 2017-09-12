@@ -40,14 +40,18 @@ RUN useradd -G www-data -d /var/www -s /bin/bash mapas; \
     chown -R mapas:www-data /var/www
 
 RUN a2enmod rewrite
-ENV APACHE_LOCK_DIR=/var/lock/apache2
-ENV APACHE_PID_FILE=/var/run/apache2/apache2.pid
-ENV APACHE_LOG_DIR=/var/www/log/mapasculturais
-ENV APACHE_RUN_USER=mapas
-ENV APACHE_RUN_GROUP=www-data
-ENV APACHE_STARTSERVERS=3
-ENV APACHE_MAXSPARESERVERS=5
-ENV APACHE_MINSPARESERVERS=3
+ENV APACHE_LOCK_DIR /var/lock/apache2
+ENV APACHE_PID_FILE /var/run/apache2/apache2.pid
+ENV APACHE_LOG_DIR /var/www/log/mapasculturais
+ENV APACHE_RUN_USER mapas
+ENV APACHE_RUN_GROUP www-data
+ENV APACHE_STARTSERVERS 3
+ENV APACHE_MAXSPARESERVERS 5
+ENV APACHE_MINSPARESERVERS 3
+ENV APACHE_DOCUMENT_ROOT /var/www/mapasculturais/src
+
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
 WORKDIR /var/www
 
