@@ -10,7 +10,7 @@ Utilizamos o [docker](https://www.docker.com) como plataforma para criar e admin
 
 Utilizamos como base a imagem ```php``` na tag ```5.6.30-apache``` pois ela já contém um conjunto de ferramentas que otimizam o funcionamento da aplicação em conjunto com o servidor web ```apache```. Alguns dos itens utilizados dessa imagem são ```docker-php-ext-configure``` e ```docker-php-ext-install``` que servem respectivamente para configurar módulos e recompilar o PHP especificamente para a imagem que estamos utilizando.
 
-Em nosso stack da aplicação temos basicamente 3 serviços:
+Em nosso stack da aplicação temos basicamente 3 serviços que são iniciados em conjunto quando a stack é iniciada:
 * Aplicação WEB
 * Banco de dados
 * Gerenciador de Dependências
