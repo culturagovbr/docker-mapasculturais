@@ -1,0 +1,37 @@
+version: '2'
+services:
+  web:
+    build: .
+    image: culturagovbr/mapasculturais:1.0
+    container_name: mapasculturais_web
+    ports:
+      - "80:80"
+    volumes:
+      - ./app/:/var/www
+      # - ./app/:/var/www/mapasculturais
+    links:
+      - db:postgis
+    environment:
+      - PG_DB=mapasculturais
+      - PG_PASS=mapasculturais
+      - PG_USER=mapasculturais
+      - PG_HOST=postgis
+      - GIT_REPOSITORY=https://github.com/hacklabr/mapasculturais
+  db:
+    image: mdillon/postgis
+    container_name: mapasculturais_database_postgres
+    environment:
+      - POSTGRES_DB=mapasculturais
+      - POSTGRES_PASSWORD=mapasculturais
+      - POSTGRES_USER=mapasculturais
+
+  dependency_manager:
+    image: composer:1.5.1
+    restart: 'no'
+    container_name: 'composer'
+    command: install --prefer-dist
+    volumes:
+      - ./app/src/protected:/app
+      # Share user and group
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
