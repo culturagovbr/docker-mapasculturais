@@ -25,13 +25,14 @@ RUN apt-get install -y freetds-dev
 
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
 RUN docker-php-ext-install gd
-RUN docker-php-ext-install php5-cli
-RUN docker-php-ext-install php5-json
-RUN docker-php-ext-install php5-curl
+# RUN docker-php-ext-install cli
+RUN docker-php-ext-install json
+RUN docker-php-ext-install curl
+RUN apt-get install -y libpq-dev
 RUN docker-php-ext-configure pgsql --with-pgsql=/usr/local/pgsql
 RUN docker-php-ext-configure pdo_pgsql --with-pgsql
 RUN docker-php-ext-install pgsql pdo_pgsql
-RUN docker-php-ext-install php-apc
+RUN pecl install apc
 
 RUN useradd -G www-data -d /var/www -s /bin/bash mapas; \
     mkdir -p /var/www/mapasculturais/src/assets; \
@@ -40,8 +41,8 @@ RUN useradd -G www-data -d /var/www -s /bin/bash mapas; \
 
 WORKDIR /var/www/mapasculturais
 
-COPY docker-entrypoint.sh /usr/local/bin/
-ENTRYPOINT ["docker_entrypoint.sh"]
+COPY ./docker-entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["docker-entrypoint.sh"]
 
 RUN a2enmod rewrite
 ENV APACHE_LOCK_DIR=/var/lock/apache2
