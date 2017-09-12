@@ -10,16 +10,17 @@ services:
       - ./app/:/var/www
       # - ./app/:/var/www/mapasculturais
     links:
-      - db:postgis
+      - database:postgis
     environment:
       - PG_DB=mapasculturais
       - PG_PASS=mapasculturais
       - PG_USER=mapasculturais
       - PG_HOST=postgis
       - GIT_REPOSITORY=https://github.com/hacklabr/mapasculturais
-  db:
+
+  database:
     image: mdillon/postgis
-    container_name: mapasculturais_database_postgres
+    container_name: mapasculturais_database
     environment:
       - POSTGRES_DB=mapasculturais
       - POSTGRES_PASSWORD=mapasculturais
@@ -28,7 +29,7 @@ services:
   dependency_manager:
     image: composer:1.5.1
     restart: 'no'
-    container_name: 'composer'
+    container_name: 'mapasculturais_composer'
     command: install --prefer-dist
     volumes:
       - ./app/src/protected:/app
