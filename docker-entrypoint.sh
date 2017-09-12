@@ -46,6 +46,8 @@ doctrine_conf="$doctrine_conf 'user'=>'$PG_USER',";
 doctrine_conf="$doctrine_conf 'host'=>'$PG_HOST',";
 doctrine_conf="$doctrine_conf ]";
 
+chown -R mapas:www-data /var/www
+
 su mapas -c sh << SUBSCRIPT
 sed -i -z -e "s/'doctrine.database'[^]]*\]/$doctrine_conf/" /var/www/mapasculturais/src/protected/application/conf/config.php
 SUBSCRIPT
