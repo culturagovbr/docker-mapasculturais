@@ -43,6 +43,8 @@ Você precisará ter os itens abaixo instalados:
  docker-compose up
 ```
 
+Caso não queira construir uma nova imagem, versionamos a imagem atual no hub.docker e pode ser utilizada sem gerar novo build. É possível acessá-la clicando [aqui](https://hub.docker.com/r/culturagovbr/mapasculturais/).
+
 ## Extra
 
 Se você gostaria de verificar algo ou fazer algum teste dentro de algum dos containers criados que estão em execução, você pode executar o comando abaixo:
